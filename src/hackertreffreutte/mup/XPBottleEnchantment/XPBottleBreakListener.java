@@ -18,7 +18,13 @@ public class XPBottleBreakListener implements Listener {
     @EventHandler
     public void onExpBottleBreak(PlayerInteractEvent event) {
 
+
+
         ItemStack item = event.getItem();
+
+        if(item == null){
+            return;
+        }
 
         if(item.getType().equals(Material.EXPERIENCE_BOTTLE)){
 
