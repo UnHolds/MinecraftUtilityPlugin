@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ToolBreakListener implements Listener {
 
@@ -83,7 +84,7 @@ public class ToolBreakListener implements Listener {
                     if(!item.equals(event.getBrokenItem()) && item.getType().equals(event.getBrokenItem().getType())){
 
                         //replace the item
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                             @Override
                             public void run() {
                                 playerInventory.setItemInMainHand(item.clone());

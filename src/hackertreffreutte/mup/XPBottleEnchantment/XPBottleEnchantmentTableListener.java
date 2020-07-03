@@ -13,6 +13,7 @@ import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
@@ -94,7 +95,7 @@ public class XPBottleEnchantmentTableListener implements Listener {
 
                 EnchantingInventory inv = (EnchantingInventory) event.getInventory();
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                     @Override
                     public void run() {
                         inv.setItem(enchantedItem);

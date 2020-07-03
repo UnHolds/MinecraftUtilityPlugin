@@ -13,15 +13,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
 
-    public static Plugin plugin;
-
 
 
 
     @Override
     public void onEnable(){
-        //register listeners
-        plugin = this;
 
         //listener for dropper planter
         getServer().getPluginManager().registerEvents(new DropperPlanterListener(), this);

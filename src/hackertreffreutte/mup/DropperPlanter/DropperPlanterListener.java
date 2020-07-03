@@ -12,6 +12,7 @@ package hackertreffreutte.mup.DropperPlanter;
         import org.bukkit.event.block.BlockDispenseEvent;
         import org.bukkit.inventory.Inventory;
         import org.bukkit.inventory.ItemStack;
+        import org.bukkit.plugin.java.JavaPlugin;
 
         import java.util.ArrayList;
 
@@ -163,7 +164,7 @@ public class DropperPlanterListener implements Listener {
                  Dropper dropper = (Dropper) event.getBlock().getState();
                  Inventory inv = dropper.getInventory();
 
-                 Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                 Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                     @Override
                     public void run() {
                         for(ItemStack stack : inv.getContents()){

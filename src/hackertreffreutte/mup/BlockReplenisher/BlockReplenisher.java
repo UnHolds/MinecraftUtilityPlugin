@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class BlockReplenisher implements Listener {
 
@@ -35,7 +36,7 @@ public class BlockReplenisher implements Listener {
                         //found same item like that that was placed
 
                         //replenish the item (move the item from the inventory to the main hand)
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.plugin, new Runnable() {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                             @Override
                             public void run() {
                                 inv.setItemInMainHand(item.clone());
