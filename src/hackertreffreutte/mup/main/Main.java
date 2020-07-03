@@ -2,6 +2,7 @@ package hackertreffreutte.mup.main;
 
 import hackertreffreutte.mup.DropperPlanter.DropperPlanterListener;
 import hackertreffreutte.mup.Enchantments.CustomEnchantments;
+import hackertreffreutte.mup.BlockReplenisher.BlockReplenisher;
 import hackertreffreutte.mup.ToolReplenisher.ToolBreakListener;
 import hackertreffreutte.mup.XPBottleEnchantment.XPBottleBreakListener;
 import hackertreffreutte.mup.XPBottleEnchantment.XPBottleEnchantment;
@@ -35,6 +36,11 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new XPBottleEnchantmentTableListener(), this);
         //create new listener for throwing xp bottles
         getServer().getPluginManager().registerEvents(new XPBottleBreakListener(), this);
+
+
+
+        //register listener for replenisher
+        getServer().getPluginManager().registerEvents(new BlockReplenisher(), this);
 
     }
 
