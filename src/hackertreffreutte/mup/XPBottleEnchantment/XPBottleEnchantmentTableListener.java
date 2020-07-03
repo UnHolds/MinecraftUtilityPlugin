@@ -37,12 +37,20 @@ public class XPBottleEnchantmentTableListener implements Listener {
             if(potionData.getType().equals(PotionType.WATER)) {
 
 
-                //TODO add checks for the surrounding bookshelves
+
+                if(event.getEnchantmentBonus() >= 2){
+                    event.getOffers()[0] = new EnchantmentOffer(CustomEnchantments.XPBottle, 1, 5);
+                }
+
+                if(event.getEnchantmentBonus() >= 8){
+                    event.getOffers()[1] = new EnchantmentOffer(CustomEnchantments.XPBottle, 2, 10);
+                }
+
+                if(event.getEnchantmentBonus() >= 15){
+                    event.getOffers()[2] = new EnchantmentOffer(CustomEnchantments.XPBottle, 3, 20);
+                }
 
 
-                event.getOffers()[0] = new EnchantmentOffer(CustomEnchantments.XPBottle, 1, 5);
-                event.getOffers()[1] = new EnchantmentOffer(CustomEnchantments.XPBottle, 2, 10);
-                event.getOffers()[2] = new EnchantmentOffer(CustomEnchantments.XPBottle, 3, 20);
                 event.setCancelled(false);
             }
         }else{

@@ -18,7 +18,7 @@ public class EnchantmentWrapper extends Enchantment {
         this.maxLevel = maxLevel;
     }
 
-    @Override
+    @Override @Deprecated
     public String getName() {
         return this.name;
     }
@@ -43,7 +43,7 @@ public class EnchantmentWrapper extends Enchantment {
         return false;
     }
 
-    @Override
+    @Override @Deprecated
     public boolean isCursed() {
         return false;
     }
