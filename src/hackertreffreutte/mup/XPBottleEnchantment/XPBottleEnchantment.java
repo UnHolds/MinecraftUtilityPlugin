@@ -1,4 +1,4 @@
-package hackertreffreutte.mup.Enchantments;
+package hackertreffreutte.mup.XPBottleEnchantment;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -6,12 +6,19 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 
-public class EnchantmentWrapper extends Enchantment {
+public class XPBottleEnchantment extends Enchantment {
 
     private String name = "";
     private int maxLevel = 0;
 
-    public EnchantmentWrapper(String namespaceKey, String name, int maxLevel) {
+
+    //Singleton Design use this var is revering to the enchantment
+    public static final Enchantment enchantment = new XPBottleEnchantment("xpbottleenchantment", "xpBottleEnchantment", 3);
+
+
+
+
+    private XPBottleEnchantment(String namespaceKey, String name, int maxLevel) {
         super(NamespacedKey.minecraft(namespaceKey));
 
         this.name = name;

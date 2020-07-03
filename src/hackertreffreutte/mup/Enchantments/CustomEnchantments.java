@@ -1,14 +1,12 @@
 package hackertreffreutte.mup.Enchantments;
 
+import hackertreffreutte.mup.XPBottleEnchantment.XPBottleEnchantment;
 import org.bukkit.enchantments.Enchantment;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class CustomEnchantments {
-
-    public static final Enchantment XPBottle = new EnchantmentWrapper("xpbottleenchantment", "xpBottleEnchantment", 3);
 
 
 

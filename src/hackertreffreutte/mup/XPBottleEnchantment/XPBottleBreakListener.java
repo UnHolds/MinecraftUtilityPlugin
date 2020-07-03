@@ -29,7 +29,7 @@ public class XPBottleBreakListener implements Listener {
             Enchantment  enchantment = null;
             int level = 0;
             for(Enchantment ench : enchantments.keySet()){
-                if(ench.equals(CustomEnchantments.XPBottle)){
+                if(ench.equals(XPBottleEnchantment.enchantment)){
                     enchantment = ench;
                     level = enchantments.get(ench);
                     break;

@@ -1,6 +1,5 @@
 package hackertreffreutte.mup.XPBottleEnchantment;
 
-import hackertreffreutte.mup.Enchantments.CustomEnchantments;
 import hackertreffreutte.mup.XPCalculator.XPCalculator;
 import hackertreffreutte.mup.main.Main;
 import org.bukkit.Bukkit;
@@ -39,15 +38,15 @@ public class XPBottleEnchantmentTableListener implements Listener {
 
 
                 if(event.getEnchantmentBonus() >= 2){
-                    event.getOffers()[0] = new EnchantmentOffer(CustomEnchantments.XPBottle, 1, 5);
+                    event.getOffers()[0] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 1, 5);
                 }
 
                 if(event.getEnchantmentBonus() >= 8){
-                    event.getOffers()[1] = new EnchantmentOffer(CustomEnchantments.XPBottle, 2, 10);
+                    event.getOffers()[1] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 2, 10);
                 }
 
                 if(event.getEnchantmentBonus() >= 15){
-                    event.getOffers()[2] = new EnchantmentOffer(CustomEnchantments.XPBottle, 3, 20);
+                    event.getOffers()[2] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 3, 20);
                 }
 
 
@@ -74,12 +73,12 @@ public class XPBottleEnchantmentTableListener implements Listener {
 
 
                 //just a placeholder so that the enchantment works
-                event.getEnchantsToAdd().put(CustomEnchantments.XPBottle, 0);
+                event.getEnchantsToAdd().put(XPBottleEnchantment.enchantment, 0);
 
                 ItemStack enchantedItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
 
                 //create the enchantment of the item
-                enchantedItem.addUnsafeEnchantment(CustomEnchantments.XPBottle, event.whichButton() + 1);
+                enchantedItem.addUnsafeEnchantment(XPBottleEnchantment.enchantment, event.whichButton() + 1);
 
                 //level String
                 String level = "";
