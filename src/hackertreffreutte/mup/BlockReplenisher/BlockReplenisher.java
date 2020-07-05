@@ -20,6 +20,12 @@ public class BlockReplenisher implements Listener {
         if(event.getItemInHand().getAmount() == 1){
 
 
+            //TODO
+            //workaround fix later otherwise shovel will be removed when making a path
+            if(event.getItemInHand().getMaxStackSize() == 1){
+                return;
+            }
+
             PlayerInventory inv = event.getPlayer().getInventory();
 
             //get material of placed item
