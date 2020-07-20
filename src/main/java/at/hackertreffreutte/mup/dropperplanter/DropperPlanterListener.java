@@ -84,7 +84,7 @@ public class DropperPlanterListener implements Listener {
         }
 
 
-        ArrayList<Block> field = new ArrayList<>();
+        ArrayList<Block> field = new ArrayList<Block>();
 
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -99,7 +99,7 @@ public class DropperPlanterListener implements Listener {
     }
 
     @EventHandler
-    public void onDispenseEvent(BlockDispenseEvent event){
+    public void onDispenseEvent(final BlockDispenseEvent event){
         if(event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER)){
 
 
@@ -162,10 +162,9 @@ public class DropperPlanterListener implements Listener {
 
                 //remove dropped item
                  Dropper dropper = (Dropper) event.getBlock().getState();
-                 Inventory inv = dropper.getInventory();
+                 final Inventory inv = dropper.getInventory();
 
                  Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                    @Override
                     public void run() {
                         for(ItemStack stack : inv.getContents()){
                             if(stack != null){

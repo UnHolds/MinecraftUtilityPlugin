@@ -79,7 +79,7 @@ public class XPBottleEnchantmentTableListener implements Listener {
                 //just a placeholder so that the enchantment works
                 event.getEnchantsToAdd().put(XPBottleEnchantment.ENCHANTMENT, 0);
 
-                ItemStack enchantedItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
+                final ItemStack enchantedItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
 
                 //create the enchantment of the item
                 enchantedItem.addUnsafeEnchantment(XPBottleEnchantment.ENCHANTMENT, event.whichButton() + 1);
@@ -96,10 +96,9 @@ public class XPBottleEnchantmentTableListener implements Listener {
                 meta.setLore(Arrays.asList("Exp Bottle: " + level));
                 enchantedItem.setItemMeta(meta);
 
-                EnchantingInventory inv = (EnchantingInventory) event.getInventory();
+                final EnchantingInventory inv = (EnchantingInventory) event.getInventory();
 
                 Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                    @Override
                     public void run() {
                         inv.setItem(enchantedItem);
                     }

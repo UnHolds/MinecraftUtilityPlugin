@@ -74,18 +74,17 @@ public class ToolBreakListener implements Listener {
 
         if(isReplenishAble(event.getBrokenItem())){
 
-            PlayerInventory playerInventory = event.getPlayer().getInventory();
+            final PlayerInventory playerInventory = event.getPlayer().getInventory();
 
 
             for(int i = 0; i < playerInventory.getContents().length; i++){
 
-                ItemStack item = playerInventory.getItem(i);
+                final ItemStack item = playerInventory.getItem(i);
                 if(item != null){
                     if(!item.equals(event.getBrokenItem()) && item.getType().equals(event.getBrokenItem().getType())){
 
                         //replace the item
                         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                            @Override
                             public void run() {
                                 playerInventory.setItemInMainHand(item.clone());
                                 item.setAmount(0);

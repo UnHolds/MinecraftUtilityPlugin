@@ -26,7 +26,7 @@ public class BlockReplenisher implements Listener {
                 return;
             }
 
-            PlayerInventory inv = event.getPlayer().getInventory();
+            final PlayerInventory inv = event.getPlayer().getInventory();
 
             //get material of placed item
             Material placedMaterial = event.getItemInHand().getType();
@@ -35,7 +35,7 @@ public class BlockReplenisher implements Listener {
             event.getItemInHand().setAmount(0);
 
             for(int i= 0; i < inv.getContents().length; i++){
-                ItemStack item = inv.getItem(i);
+                final ItemStack item = inv.getItem(i);
 
                 if(item != null){
                     if(item.getType().equals(placedMaterial)){
@@ -43,7 +43,6 @@ public class BlockReplenisher implements Listener {
 
                         //replenish the item (move the item from the inventory to the main hand)
                         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                            @Override
                             public void run() {
                                 inv.setItemInMainHand(item.clone());
                                 item.setAmount(0);
