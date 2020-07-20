@@ -21,12 +21,11 @@ import java.util.Arrays;
 
 public class XPBottleEnchantmentTableListener implements Listener {
 
+
+
+
     @EventHandler
     public void onItemInEnchantmentTable(PrepareItemEnchantEvent event){
-
-
-        //here is a bug with the lapis
-        //if you add the lapis afterwards then there will be a bug and no enchantments will show up
 
 
         if(event.getItem().getType().equals(Material.POTION) ) {
@@ -37,6 +36,7 @@ public class XPBottleEnchantmentTableListener implements Listener {
             if(potionData.getType().equals(PotionType.WATER)) {
 
 
+                Bukkit.broadcastMessage(event.getOffers()[0] + " offer");
 
                 if(event.getEnchantmentBonus() >= 2){
                     event.getOffers()[0] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 1, 5);
@@ -57,6 +57,9 @@ public class XPBottleEnchantmentTableListener implements Listener {
             return;
         }
     }
+
+
+
 
     @EventHandler
     public void onItemEnchant(EnchantItemEvent event){
