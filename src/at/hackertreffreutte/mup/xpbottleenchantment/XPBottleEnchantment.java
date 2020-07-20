@@ -1,6 +1,5 @@
-package hackertreffreutte.mup.XPBottleEnchantment;
+package at.hackertreffreutte.mup.xpbottleenchantment;
 
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -13,7 +12,7 @@ public class XPBottleEnchantment extends Enchantment {
 
 
     //Singleton Design use this var is revering to the enchantment
-    public static final Enchantment enchantment = new XPBottleEnchantment("xpbottleenchantment", "xpBottleEnchantment", 3);
+    public static final Enchantment ENCHANTMENT = new XPBottleEnchantment("xpbottleenchantment", "xpBottleEnchantment", 3);
 
 
 

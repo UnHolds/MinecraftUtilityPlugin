@@ -1,6 +1,6 @@
-package hackertreffreutte.mup.BlockReplenisher;
+package at.hackertreffreutte.mup.blockreplenisher;
 
-import hackertreffreutte.mup.main.Main;
+import at.hackertreffreutte.mup.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

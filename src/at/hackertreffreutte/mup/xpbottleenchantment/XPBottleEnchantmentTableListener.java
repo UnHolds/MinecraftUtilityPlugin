@@ -1,7 +1,7 @@
-package hackertreffreutte.mup.XPBottleEnchantment;
+package at.hackertreffreutte.mup.xpbottleenchantment;
 
-import hackertreffreutte.mup.XPCalculator.XPCalculator;
-import hackertreffreutte.mup.main.Main;
+import at.hackertreffreutte.mup.xpcalculator.XPCalculator;
+import at.hackertreffreutte.mup.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.EnchantmentOffer;
@@ -39,15 +39,15 @@ public class XPBottleEnchantmentTableListener implements Listener {
                 Bukkit.broadcastMessage(event.getOffers()[0] + " offer");
 
                 if(event.getEnchantmentBonus() >= 2){
-                    event.getOffers()[0] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 1, 5);
+                    event.getOffers()[0] = new EnchantmentOffer(XPBottleEnchantment.ENCHANTMENT, 1, 5);
                 }
 
                 if(event.getEnchantmentBonus() >= 8){
-                    event.getOffers()[1] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 2, 10);
+                    event.getOffers()[1] = new EnchantmentOffer(XPBottleEnchantment.ENCHANTMENT, 2, 10);
                 }
 
                 if(event.getEnchantmentBonus() >= 15){
-                    event.getOffers()[2] = new EnchantmentOffer(XPBottleEnchantment.enchantment, 3, 20);
+                    event.getOffers()[2] = new EnchantmentOffer(XPBottleEnchantment.ENCHANTMENT, 3, 20);
                 }
 
 
@@ -77,12 +77,12 @@ public class XPBottleEnchantmentTableListener implements Listener {
 
 
                 //just a placeholder so that the enchantment works
-                event.getEnchantsToAdd().put(XPBottleEnchantment.enchantment, 0);
+                event.getEnchantsToAdd().put(XPBottleEnchantment.ENCHANTMENT, 0);
 
                 ItemStack enchantedItem = new ItemStack(Material.EXPERIENCE_BOTTLE);
 
                 //create the enchantment of the item
-                enchantedItem.addUnsafeEnchantment(XPBottleEnchantment.enchantment, event.whichButton() + 1);
+                enchantedItem.addUnsafeEnchantment(XPBottleEnchantment.ENCHANTMENT, event.whichButton() + 1);
 
                 //level String
                 String level = "";

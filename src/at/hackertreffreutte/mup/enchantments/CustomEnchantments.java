@@ -1,6 +1,5 @@
-package hackertreffreutte.mup.Enchantments;
+package at.hackertreffreutte.mup.enchantments;
 
-import hackertreffreutte.mup.XPBottleEnchantment.XPBottleEnchantment;
 import org.bukkit.enchantments.Enchantment;
 import java.lang.reflect.Field;
 import java.util.Arrays;

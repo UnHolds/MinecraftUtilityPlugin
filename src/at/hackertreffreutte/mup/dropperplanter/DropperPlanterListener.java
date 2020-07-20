@@ -1,6 +1,6 @@
-package hackertreffreutte.mup.DropperPlanter;
+package at.hackertreffreutte.mup.dropperplanter;
 
-        import hackertreffreutte.mup.main.Main;
+        import at.hackertreffreutte.mup.main.Main;
         import org.bukkit.Bukkit;
         import org.bukkit.Location;
         import org.bukkit.Material;

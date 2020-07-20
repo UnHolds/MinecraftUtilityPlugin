@@ -1,19 +1,15 @@
-package hackertreffreutte.mup.main;
+package at.hackertreffreutte.mup.main;
 
-import hackertreffreutte.mup.DropperPlanter.DropperPlanterListener;
-import hackertreffreutte.mup.Enchantments.CustomEnchantments;
-import hackertreffreutte.mup.BlockReplenisher.BlockReplenisher;
-import hackertreffreutte.mup.ToolReplenisher.ToolBreakListener;
-import hackertreffreutte.mup.XPBottleEnchantment.XPBottleBreakListener;
-import hackertreffreutte.mup.XPBottleEnchantment.XPBottleEnchantment;
-import hackertreffreutte.mup.XPBottleEnchantment.XPBottleEnchantmentTableListener;
-import org.bukkit.plugin.Plugin;
+import at.hackertreffreutte.mup.dropperplanter.DropperPlanterListener;
+import at.hackertreffreutte.mup.enchantments.CustomEnchantments;
+import at.hackertreffreutte.mup.blockreplenisher.BlockReplenisher;
+import at.hackertreffreutte.mup.toolreplenisher.ToolBreakListener;
+import at.hackertreffreutte.mup.xpbottleenchantment.XPBottleBreakListener;
+import at.hackertreffreutte.mup.xpbottleenchantment.XPBottleEnchantment;
+import at.hackertreffreutte.mup.xpbottleenchantment.XPBottleEnchantmentTableListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-
-
-
 
 
     @Override
@@ -27,7 +23,7 @@ public class Main extends JavaPlugin {
 
 
         //register new enchantment
-        CustomEnchantments.register(XPBottleEnchantment.enchantment);
+        CustomEnchantments.register(XPBottleEnchantment.ENCHANTMENT);
         //create new listener for enchantment table
         getServer().getPluginManager().registerEvents(new XPBottleEnchantmentTableListener(), this);
         //create new listener for throwing xp bottles

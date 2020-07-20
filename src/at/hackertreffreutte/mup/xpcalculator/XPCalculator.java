@@ -1,4 +1,4 @@
-package hackertreffreutte.mup.XPCalculator;
+package at.hackertreffreutte.mup.xpcalculator;
 
 public class XPCalculator {
 

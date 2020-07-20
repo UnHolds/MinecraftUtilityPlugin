@@ -1,6 +1,6 @@
-package hackertreffreutte.mup.ToolReplenisher;
+package at.hackertreffreutte.mup.toolreplenisher;
 
-import hackertreffreutte.mup.main.Main;
+import at.hackertreffreutte.mup.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

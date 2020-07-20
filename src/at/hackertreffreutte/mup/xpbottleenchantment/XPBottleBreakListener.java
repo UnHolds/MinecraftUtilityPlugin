@@ -1,20 +1,15 @@
-package hackertreffreutte.mup.XPBottleEnchantment;
+package at.hackertreffreutte.mup.xpbottleenchantment;
 
-import hackertreffreutte.mup.Enchantments.CustomEnchantments;
-import hackertreffreutte.mup.XPCalculator.XPCalculator;
-import org.bukkit.Bukkit;
+import at.hackertreffreutte.mup.xpcalculator.XPCalculator;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ExpBottleEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.nio.Buffer;
 import java.util.Map;
 
 public class XPBottleBreakListener implements Listener {
@@ -52,7 +47,7 @@ public class XPBottleBreakListener implements Listener {
             Enchantment  enchantment = null;
             int level = 0;
             for(Enchantment ench : enchantments.keySet()){
-                if(ench.equals(XPBottleEnchantment.enchantment)){
+                if(ench.equals(XPBottleEnchantment.ENCHANTMENT)){
                     enchantment = ench;
                     level = enchantments.get(ench);
                     break;
