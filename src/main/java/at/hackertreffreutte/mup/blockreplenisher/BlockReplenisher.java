@@ -44,8 +44,13 @@ public class BlockReplenisher implements Listener {
                         //replenish the item (move the item from the inventory to the main hand)
                         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                             public void run() {
-                                inv.setItemInMainHand(item.clone());
-                                item.setAmount(0);
+                                if(playerInventory.getItemMainHand()!=null){
+                                    inv.setItemInMainHand(item.clone());
+                                    item.setAmount(0);
+                                }else if(playerInventory.getItemOffHand()!=null){
+                                    inv.setItemInOffHand(item.clone());
+                                    item.setAmount(0);
+                                }
                             }
                         },1L);
 
