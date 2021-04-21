@@ -1,4 +1,4 @@
 name: MUP
-version: 0.0.1
-main: hackertreffreutte.mup.main.Main
-api-version: 1.15
+version: 0.1.1
+main: at.hackertreffreutte.mup.main.Main
+api-version: 1.16

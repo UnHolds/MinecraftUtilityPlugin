@@ -36,7 +36,7 @@ public class XPBottleEnchantmentTableListener implements Listener {
             if(potionData.getType().equals(PotionType.WATER)) {
 
 
-                Bukkit.broadcastMessage(event.getOffers()[0] + " offer");
+                //Bukkit.broadcastMessage(event.getOffers()[0] + " offer");
 
                 if(event.getEnchantmentBonus() >= 2){
                     event.getOffers()[0] = new EnchantmentOffer(XPBottleEnchantment.ENCHANTMENT, 1, 5);
