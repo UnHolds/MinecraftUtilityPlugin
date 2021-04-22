@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +33,12 @@ public class BlockReplenisher implements Listener {
             Material placedMaterial = event.getItemInHand().getType();
 
             //remove placed item
-            event.getItemInHand().setAmount(0);
+            if(event.getHand() == EquipmentSlot.HAND){
+                event.getItemInHand().setAmount(0);
+            }else{
+                event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
+            }
+
 
             for(int i= 0; i < inv.getContents().length; i++){
                 final ItemStack item = inv.getItem(i);
@@ -44,10 +50,10 @@ public class BlockReplenisher implements Listener {
                         //replenish the item (move the item from the inventory to the main hand)
                         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
                             public void run() {
-                                if(inv.getItemInMainHand()!=null){
+                                if(event.getHand() == EquipmentSlot.HAND){
                                     inv.setItemInMainHand(item.clone());
                                     item.setAmount(0);
-                                }else if(inv.getItemInOffHand()!=null){
+                                }else if(event.getHand() == EquipmentSlot.OFF_HAND){
                                     inv.setItemInOffHand(item.clone());
                                     item.setAmount(0);
                                 }

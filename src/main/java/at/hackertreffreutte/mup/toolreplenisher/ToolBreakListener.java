@@ -49,6 +49,9 @@ public class ToolBreakListener implements Listener {
             case STONE_HOE:
             case WOODEN_HOE:
 
+            //shield
+            case SHIELD:
+
              //scissors / shears
             case SHEARS:
 
@@ -75,8 +78,6 @@ public class ToolBreakListener implements Listener {
         if(isReplenishAble(event.getBrokenItem())){
 
             final PlayerInventory playerInventory = event.getPlayer().getInventory();
-
-
             for(int i = 0; i < playerInventory.getContents().length; i++){
 
                 final ItemStack item = playerInventory.getItem(i);
@@ -85,9 +86,15 @@ public class ToolBreakListener implements Listener {
 
                         //replace the item
                         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                            public void run() {
-                                playerInventory.setItemInMainHand(item.clone());
+                            public void run(){
+                                if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
+                                    playerInventory.setItemInMainHand(item.clone());
+                                    item.setAmount(0);
+                                }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
+                                    playerInventory.setItemInOffHand(item.clone());
                                 item.setAmount(0);
+                            }
+
                             }
                         },1L);
 
