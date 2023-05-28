@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -71,14 +72,23 @@ public class DropperPlanterListener implements Listener {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                Location loc = new Location(soilOriginLocation.getWorld(), (double) posX + i, soilOriginLocation.getBlockY(), (double) posZ + j);
-                if (loc.getBlock().getType().equals(Material.FARMLAND) && loc.add(0, 1, 0).getBlock().getType().equals(Material.AIR)) {
-                    field.add(loc.getBlock());
+                Location location = fetchLocation(soilOriginLocation, posX, posZ, i, j);
+
+                if (isFarmable(location)) {
+                    field.add(location.getBlock());
                 }
             }
         }
-
         return field;
+    }
+
+    @NotNull
+    private static Location fetchLocation(Location soilOriginLocation, double posX, double posZ, int i, int j) {
+        return new Location(soilOriginLocation.getWorld(), posX + i, soilOriginLocation.getBlockY(), posZ + j);
+    }
+
+    private static boolean isFarmable(Location location) {
+        return location.getBlock().getType().equals(Material.FARMLAND) && location.add(0, 1, 0).getBlock().getType().equals(Material.AIR);
     }
 
     @EventHandler
