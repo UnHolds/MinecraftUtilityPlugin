@@ -4,18 +4,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class XPBottleEnchantment extends Enchantment {
 
     private String name = "";
     private int maxLevel = 0;
 
-
     //Singleton Design use this var is revering to the enchantment
     public static final Enchantment ENCHANTMENT = new XPBottleEnchantment("xpbottleenchantment", "xpBottleEnchantment", 3);
-
-
-
 
     private XPBottleEnchantment(String namespaceKey, String name, int maxLevel) {
         super(NamespacedKey.minecraft(namespaceKey));
@@ -24,7 +21,8 @@ public class XPBottleEnchantment extends Enchantment {
         this.maxLevel = maxLevel;
     }
 
-    @Override @Deprecated
+    @Override
+    @Deprecated
     public String getName() {
         return this.name;
     }
@@ -40,6 +38,7 @@ public class XPBottleEnchantment extends Enchantment {
     }
 
     @Override
+    @NotNull
     public EnchantmentTarget getItemTarget() {
         return EnchantmentTarget.ALL;
     }
@@ -49,18 +48,19 @@ public class XPBottleEnchantment extends Enchantment {
         return false;
     }
 
-    @Override @Deprecated
+    @Override
+    @Deprecated
     public boolean isCursed() {
         return false;
     }
 
     @Override
-    public boolean conflictsWith(Enchantment enchantment) {
+    public boolean conflictsWith(@NotNull Enchantment enchantment) {
         return false;
     }
 
     @Override
-    public boolean canEnchantItem(ItemStack itemStack) {
+    public boolean canEnchantItem(@NotNull ItemStack itemStack) {
         return true;
     }
 }
