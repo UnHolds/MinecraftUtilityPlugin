@@ -71,15 +71,19 @@ public class ToolBreakListener implements Listener {
     }
 
     private static void replaceItem(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
-            if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
-                playerInventory.setItemInMainHand(item.clone());
-                item.setAmount(0);
-            }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
-                playerInventory.setItemInOffHand(item.clone());
-                item.setAmount(0);
-            }
-        },1L);
+         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replaceHand(event, playerInventory, item), 1L);
+    }
+
+    private static void replaceHand(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
+
+         if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
+            playerInventory.setItemInMainHand(item.clone());
+            item.setAmount(0);
+
+        }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
+            playerInventory.setItemInOffHand(item.clone());
+            item.setAmount(0);
+        }
     }
 
     private static boolean isValidItem(PlayerItemBreakEvent event, ItemStack item) {
