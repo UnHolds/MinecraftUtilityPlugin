@@ -155,12 +155,15 @@ public class DropperPlanterListener implements Listener {
         final Inventory inventory = dropper.getInventory();
 
         for (ItemStack stack : inventory.getContents()) {
-
-            if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
+            if (isValidItem(event, stack)) {
                 stack.setAmount(stack.getAmount() - 1);
                 break;
             }
         }
+    }
+
+    private static boolean isValidItem(BlockDispenseEvent event, ItemStack stack) {
+        return stack != null && (stack.getType().equals(event.getItem().getType()));
     }
 
     private Material seedToPlant(ItemStack seed) {
