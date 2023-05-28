@@ -2,6 +2,7 @@ package at.hackertreffreutte.mup.toolreplenisher;
 
 import at.hackertreffreutte.mup.main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -11,8 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ToolBreakListener implements Listener {
 
-     public boolean isReplenishAble(ItemStack item){
-        switch (item.getType()){
+    public boolean isReplenishAble(ItemStack item) {
+        switch (item.getType()) {
 
             case DIAMOND_PICKAXE:
             case GOLDEN_PICKAXE:
@@ -51,18 +52,19 @@ public class ToolBreakListener implements Listener {
             case FISHING_ROD:
                 return true;
 
-            default: return false;
+            default:
+                return false;
         }
     }
 
     @EventHandler
-    public void onPlayerToolBreakEvent(PlayerItemBreakEvent event){
+    public void onPlayerToolBreakEvent(PlayerItemBreakEvent event) {
 
-        if(isReplenishAble(event.getBrokenItem())){
+        if (isReplenishAble(event.getBrokenItem())) {
             final PlayerInventory playerInventory = event.getPlayer().getInventory();
 
-            for(ItemStack item : playerInventory){
-                if(isValidItem(event, item)){
+            for (ItemStack item : playerInventory) {
+                if (isValidItem(event, item)) {
                     replaceItem(event, playerInventory, item);
                     break;
                 }
@@ -71,16 +73,19 @@ public class ToolBreakListener implements Listener {
     }
 
     private static void replaceItem(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
-         Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replaceHand(event, playerInventory, item), 1L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replaceHand(event, playerInventory, item), 1L);
     }
 
     private static void replaceHand(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
+        Material brokenItem = event.getBrokenItem().getType();
+        Material mainHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
+        Material offHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
 
-         if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
+        if (brokenItem.equals(mainHandItem)) {
             playerInventory.setItemInMainHand(item.clone());
             item.setAmount(0);
 
-        }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
+        } else if (brokenItem.equals(offHandItem)) {
             playerInventory.setItemInOffHand(item.clone());
             item.setAmount(0);
         }
