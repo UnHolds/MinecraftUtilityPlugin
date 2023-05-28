@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -106,22 +107,33 @@ public class DropperPlanterListener implements Listener {
 
             Dispenser dropperType = (Dispenser) event.getBlock().getBlockData();
             BlockFace targetFace = dropperType.getFacing();
+            Block soilOriginBlock = fetchSoilOriginBlock(event, targetFace);
 
-            Block soilOriginBlock;
-            Location location = event.getBlock().getLocation();
-
-            switch (targetFace) {
-                case NORTH: soilOriginBlock = location.add(0, -1, -1).getBlock(); break;
-                case EAST: soilOriginBlock = location.add(1, -1, 0).getBlock(); break;
-                case SOUTH: soilOriginBlock = location.add(0, -1, 1).getBlock(); break;
-                case WEST: soilOriginBlock = location.add(-1, -1, 0).getBlock(); break;
-                default: return;
+            if (soilOriginBlock == null) {
+                return;
             }
 
-            if (soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND)) {
+            if (isFarmable(soilOriginBlock)) {
                 plant(event, targetFace, soilOriginBlock);
             }
         }
+    }
+
+    @Nullable
+    private static Block fetchSoilOriginBlock(BlockDispenseEvent event, BlockFace targetFace) {
+        Location location = event.getBlock().getLocation();
+
+        switch (targetFace) {
+            case NORTH: return location.add(0, -1, -1).getBlock();
+            case EAST: return location.add(1, -1, 0).getBlock();
+            case SOUTH: return location.add(0, -1, 1).getBlock();
+            case WEST: return location.add(-1, -1, 0).getBlock();
+            default: return null;
+        }
+    }
+
+    private static boolean isFarmable(Block soilOriginBlock) {
+        return soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND);
     }
 
     private void plant(BlockDispenseEvent event, BlockFace targetFace, Block soilOriginBlock) {
