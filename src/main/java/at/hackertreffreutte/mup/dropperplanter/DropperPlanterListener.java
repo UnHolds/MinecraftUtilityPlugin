@@ -34,16 +34,11 @@ public class DropperPlanterListener implements Listener {
     private Material seedToPlant(ItemStack seed) {
 
         switch (seed.getType()) {
-            case WHEAT_SEEDS:
-                return Material.WHEAT;
-            case BEETROOT_SEEDS:
-                return Material.BEETROOTS;
-            case CARROT:
-                return Material.CARROTS;
-            case POTATO:
-                return Material.POTATOES;
-            default:
-                return Material.AIR;
+            case WHEAT_SEEDS: return Material.WHEAT;
+            case BEETROOT_SEEDS: return Material.BEETROOTS;
+            case CARROT: return Material.CARROTS;
+            case POTATO: return Material.POTATOES;
+            default: return Material.AIR;
         }
     }
 
@@ -69,14 +64,14 @@ public class DropperPlanterListener implements Listener {
             posZ = soilOriginLocation.getBlockZ() - 1;
 
         } else {
-            return new ArrayList<Block>();
+            return new ArrayList<>();
         }
 
-        ArrayList<Block> field = new ArrayList<Block>();
+        ArrayList<Block> field = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                Location loc = new Location(soilOriginLocation.getWorld(), (double) posX + i, (double) soilOriginLocation.getBlockY(), (double) posZ + j);
+                Location loc = new Location(soilOriginLocation.getWorld(), (double) posX + i, soilOriginLocation.getBlockY(), (double) posZ + j);
                 if (loc.getBlock().getType().equals(Material.FARMLAND) && loc.add(0, 1, 0).getBlock().getType().equals(Material.AIR)) {
                     field.add(loc.getBlock());
                 }
@@ -91,34 +86,27 @@ public class DropperPlanterListener implements Listener {
         if (event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER)) {
 
             //check if item is seed otherwise return
-            if (plantable(event.getItem()) == false) {
+            if (!plantable(event.getItem())) {
                 return;
             }
 
             org.bukkit.block.data.type.Dispenser dropperType = (org.bukkit.block.data.type.Dispenser) event.getBlock().getBlockData();
             BlockFace targetFace = dropperType.getFacing();
 
-            Block soilOriginBlock = null;
-            Block wheatOriginBlock = null;
+            Block soilOriginBlock;
+            Location location = event.getBlock().getLocation();
 
             if (targetFace.equals(BlockFace.NORTH)) {
-
-                soilOriginBlock = event.getBlock().getLocation().add(0, -1, -1).getBlock();
-                wheatOriginBlock = event.getBlock().getLocation().add(0, 0, -1).getBlock();
+                soilOriginBlock = location.add(0, -1, -1).getBlock();
 
             } else if (targetFace.equals(BlockFace.EAST)) {
-
-                soilOriginBlock = event.getBlock().getLocation().add(1, -1, 0).getBlock();
-                wheatOriginBlock = event.getBlock().getLocation().add(1, 0, 0).getBlock();
+                soilOriginBlock = location.add(1, -1, 0).getBlock();
 
             } else if (targetFace.equals(BlockFace.SOUTH)) {
-
-                soilOriginBlock = event.getBlock().getLocation().add(0, -1, 1).getBlock();
-                wheatOriginBlock = event.getBlock().getLocation().add(0, 0, 1).getBlock();
+                soilOriginBlock = location.add(0, -1, 1).getBlock();
 
             } else if (targetFace.equals(BlockFace.WEST)) {
-                soilOriginBlock = event.getBlock().getLocation().add(-1, -1, 0).getBlock();
-                wheatOriginBlock = event.getBlock().getLocation().add(-1, 0, 0).getBlock();
+                soilOriginBlock = location.add(-1, -1, 0).getBlock();
 
             } else {
                 return;
@@ -133,7 +121,7 @@ public class DropperPlanterListener implements Listener {
                 event.setCancelled(true);
 
                 //nothing to plant -> cancel
-                if (field.size() == 0) {
+                if (field.isEmpty()) {
                     return;
                 }
 
@@ -141,21 +129,17 @@ public class DropperPlanterListener implements Listener {
                 Dropper dropper = (Dropper) event.getBlock().getState();
                 final Inventory inv = dropper.getInventory();
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                    public void run() {
-                        for (ItemStack stack : inv.getContents()) {
-                            if (stack != null) {
-                                if (stack.getType().equals(event.getItem().getType())) {
-                                    stack.setAmount(stack.getAmount() - 1);
-                                    break;
-                                }
-                            }
+                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
+                    for (ItemStack stack : inv.getContents()) {
+
+                        if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
+                            stack.setAmount(stack.getAmount() - 1);
+                            break;
                         }
                     }
                 }, 1L);
 
                 int randomIndex = (int) (Math.random() * field.size());
-
                 //overflow protection
                 if (randomIndex == field.size()) {
                     randomIndex = 0;
