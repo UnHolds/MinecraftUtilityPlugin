@@ -21,6 +21,28 @@ import java.util.ArrayList;
 
 public class DropperPlanterListener implements Listener {
 
+    @EventHandler
+    public void onDispenseEvent(final BlockDispenseEvent event) {
+        if (isDropper(event)) {
+
+            if (!plantable(event.getItem())) {
+                return;
+            }
+
+            Dispenser dropperType = (Dispenser) event.getBlock().getBlockData();
+            BlockFace targetFace = dropperType.getFacing();
+            Block soilOriginBlock = fetchSoilOriginBlock(event, targetFace);
+
+            if (soilOriginBlock == null) {
+                return;
+            }
+
+            if (isFarmable(soilOriginBlock)) {
+                plant(event, targetFace, soilOriginBlock);
+            }
+        }
+    }
+
     private boolean plantable(ItemStack item) {
 
         switch (item.getType()) {
@@ -97,28 +119,6 @@ public class DropperPlanterListener implements Listener {
         return location.getBlock().getType().equals(Material.FARMLAND) && location.add(0, 1, 0).getBlock().getType().equals(Material.AIR);
     }
 
-    @EventHandler
-    public void onDispenseEvent(final BlockDispenseEvent event) {
-        if (isDropper(event)) {
-
-            if (!plantable(event.getItem())) {
-                return;
-            }
-
-            Dispenser dropperType = (Dispenser) event.getBlock().getBlockData();
-            BlockFace targetFace = dropperType.getFacing();
-            Block soilOriginBlock = fetchSoilOriginBlock(event, targetFace);
-
-            if (soilOriginBlock == null) {
-                return;
-            }
-
-            if (isFarmable(soilOriginBlock)) {
-                plant(event, targetFace, soilOriginBlock);
-            }
-        }
-    }
-
     @Nullable
     private static Block fetchSoilOriginBlock(BlockDispenseEvent event, BlockFace targetFace) {
         Location location = event.getBlock().getLocation();
@@ -146,19 +146,7 @@ public class DropperPlanterListener implements Listener {
             return;
         }
 
-        //remove dropped item
-        Dropper dropper = (Dropper) event.getBlock().getState();
-        final Inventory inv = dropper.getInventory();
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
-            for (ItemStack stack : inv.getContents()) {
-
-                if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
-                    stack.setAmount(stack.getAmount() - 1);
-                    break;
-                }
-            }
-        }, 1L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> removeItem(event), 1L);
 
         int randomIndex = (int) (Math.random() * field.size());
         //overflow protection
@@ -167,6 +155,19 @@ public class DropperPlanterListener implements Listener {
         }
 
         field.get(randomIndex).setType(seedToPlant(event.getItem()));
+    }
+
+    private static void removeItem(BlockDispenseEvent event) {
+        Dropper dropper = (Dropper) event.getBlock().getState();
+        final Inventory inventory = dropper.getInventory();
+
+        for (ItemStack stack : inventory.getContents()) {
+
+            if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
+                stack.setAmount(stack.getAmount() - 1);
+                break;
+            }
+        }
     }
 
     private static boolean isDropper(BlockDispenseEvent event) {
