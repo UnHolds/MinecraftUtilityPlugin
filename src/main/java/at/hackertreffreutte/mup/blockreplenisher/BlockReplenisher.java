@@ -16,7 +16,6 @@ public class BlockReplenisher implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
 
-        //placed last item
         if(placedLastItem(event)){
             //TODO
             //workaround fix later otherwise shovel will be removed when making a path
@@ -34,23 +33,10 @@ public class BlockReplenisher implements Listener {
         Material placedMaterial = event.getItemInHand().getType();
 
         for(ItemStack item : inventory.getContents()){
-
-            if(item != null && (item.getType().equals(placedMaterial))){
-                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replenishHand(event, inventory, item) ,1L);
+            if(isPlacedMaterial(placedMaterial, item)){
+                replenishItem(event, inventory, item);
                 break;
             }
-        }
-    }
-
-    private static void replenishHand(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
-
-        if(event.getHand() == EquipmentSlot.HAND){
-            inventory.setItemInMainHand(item.clone());
-            item.setAmount(0);
-
-        }else if(event.getHand() == EquipmentSlot.OFF_HAND){
-            inventory.setItemInOffHand(item.clone());
-            item.setAmount(0);
         }
     }
 
@@ -63,6 +49,26 @@ public class BlockReplenisher implements Listener {
             event.getItemInHand().setAmount(0);
         }else{
             event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
+        }
+    }
+
+    private static boolean isPlacedMaterial(Material placedMaterial, ItemStack item) {
+        return item != null && (item.getType().equals(placedMaterial));
+    }
+
+    private static void replenishItem(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replenishHand(event, inventory, item) ,1L);
+    }
+
+    private static void replenishHand(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
+
+        if(event.getHand() == EquipmentSlot.HAND){
+            inventory.setItemInMainHand(item.clone());
+            item.setAmount(0);
+
+        }else if(event.getHand() == EquipmentSlot.OFF_HAND){
+            inventory.setItemInOffHand(item.clone());
+            item.setAmount(0);
         }
     }
 }
