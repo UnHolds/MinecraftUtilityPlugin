@@ -43,6 +43,10 @@ public class DropperPlanterListener implements Listener {
         }
     }
 
+    private static boolean isDropper(BlockDispenseEvent event) {
+        return event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER);
+    }
+
     private boolean plantable(ItemStack item) {
 
         switch (item.getType()) {
@@ -56,15 +60,67 @@ public class DropperPlanterListener implements Listener {
         }
     }
 
-    private Material seedToPlant(ItemStack seed) {
+    @Nullable
+    private static Block fetchSoilOriginBlock(BlockDispenseEvent event, BlockFace targetFace) {
+        Location location = event.getBlock().getLocation();
 
-        switch (seed.getType()) {
-            case WHEAT_SEEDS: return Material.WHEAT;
-            case BEETROOT_SEEDS: return Material.BEETROOTS;
-            case CARROT: return Material.CARROTS;
-            case POTATO: return Material.POTATOES;
-            default: return Material.AIR;
+        switch (targetFace) {
+            case NORTH: return location.add(0, -1, -1).getBlock();
+            case EAST: return location.add(1, -1, 0).getBlock();
+            case SOUTH: return location.add(0, -1, 1).getBlock();
+            case WEST: return location.add(-1, -1, 0).getBlock();
+            default: return null;
         }
+    }
+
+    private static boolean isFarmable(Block soilOriginBlock) {
+        return soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND);
+    }
+
+    @NotNull
+    private static ArrayList<Block> buildField(Location soilOriginLocation, int posX, int posZ) {
+        ArrayList<Block> field = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Location location = fetchLocation(soilOriginLocation, posX, posZ, i, j);
+
+                if (isFarmable(location)) {
+                    field.add(location.getBlock());
+                }
+            }
+        }
+        return field;
+    }
+
+    @NotNull
+    private static Location fetchLocation(Location soilOriginLocation, double posX, double posZ, int i, int j) {
+        return new Location(soilOriginLocation.getWorld(), posX + i, soilOriginLocation.getBlockY(), posZ + j);
+    }
+
+    private static boolean isFarmable(Location location) {
+        return location.getBlock().getType().equals(Material.FARMLAND) && location.add(0, 1, 0).getBlock().getType().equals(Material.AIR);
+    }
+
+    private void plant(BlockDispenseEvent event, BlockFace targetFace, Block soilOriginBlock) {
+        ArrayList<Block> field = getField(soilOriginBlock.getLocation(), targetFace);
+
+        //throw nothing out
+        event.setCancelled(true);
+
+        if (field.isEmpty()) {
+            return;
+        }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> removeItem(event), 1L);
+
+        int randomIndex = (int) (Math.random() * field.size());
+        //overflow protection
+        if (randomIndex == field.size()) {
+            randomIndex = 0;
+        }
+
+        field.get(randomIndex).setType(seedToPlant(event.getItem()));
     }
 
     private ArrayList<Block> getField(Location soilOriginLocation, BlockFace direction) {
@@ -94,69 +150,6 @@ public class DropperPlanterListener implements Listener {
         return buildField(soilOriginLocation, posX, posZ);
     }
 
-    @NotNull
-    private static ArrayList<Block> buildField(Location soilOriginLocation, int posX, int posZ) {
-        ArrayList<Block> field = new ArrayList<>();
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Location location = fetchLocation(soilOriginLocation, posX, posZ, i, j);
-
-                if (isFarmable(location)) {
-                    field.add(location.getBlock());
-                }
-            }
-        }
-        return field;
-    }
-
-    @NotNull
-    private static Location fetchLocation(Location soilOriginLocation, double posX, double posZ, int i, int j) {
-        return new Location(soilOriginLocation.getWorld(), posX + i, soilOriginLocation.getBlockY(), posZ + j);
-    }
-
-    private static boolean isFarmable(Location location) {
-        return location.getBlock().getType().equals(Material.FARMLAND) && location.add(0, 1, 0).getBlock().getType().equals(Material.AIR);
-    }
-
-    @Nullable
-    private static Block fetchSoilOriginBlock(BlockDispenseEvent event, BlockFace targetFace) {
-        Location location = event.getBlock().getLocation();
-
-        switch (targetFace) {
-            case NORTH: return location.add(0, -1, -1).getBlock();
-            case EAST: return location.add(1, -1, 0).getBlock();
-            case SOUTH: return location.add(0, -1, 1).getBlock();
-            case WEST: return location.add(-1, -1, 0).getBlock();
-            default: return null;
-        }
-    }
-
-    private static boolean isFarmable(Block soilOriginBlock) {
-        return soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND);
-    }
-
-    private void plant(BlockDispenseEvent event, BlockFace targetFace, Block soilOriginBlock) {
-        ArrayList<Block> field = getField(soilOriginBlock.getLocation(), targetFace);
-
-        //throw nothing out
-        event.setCancelled(true);
-
-        if (field.isEmpty()) {
-            return;
-        }
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> removeItem(event), 1L);
-
-        int randomIndex = (int) (Math.random() * field.size());
-        //overflow protection
-        if (randomIndex == field.size()) {
-            randomIndex = 0;
-        }
-
-        field.get(randomIndex).setType(seedToPlant(event.getItem()));
-    }
-
     private static void removeItem(BlockDispenseEvent event) {
         Dropper dropper = (Dropper) event.getBlock().getState();
         final Inventory inventory = dropper.getInventory();
@@ -170,7 +163,14 @@ public class DropperPlanterListener implements Listener {
         }
     }
 
-    private static boolean isDropper(BlockDispenseEvent event) {
-        return event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER);
+    private Material seedToPlant(ItemStack seed) {
+
+        switch (seed.getType()) {
+            case WHEAT_SEEDS: return Material.WHEAT;
+            case BEETROOT_SEEDS: return Material.BEETROOTS;
+            case CARROT: return Material.CARROTS;
+            case POTATO: return Material.POTATOES;
+            default: return Material.AIR;
+        }
     }
 }
