@@ -12,6 +12,44 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ToolBreakListener implements Listener {
 
+    @EventHandler
+    public void onPlayerToolBreakEvent(PlayerItemBreakEvent event) {
+
+        if (isReplenishAble(event.getBrokenItem())) {
+            final PlayerInventory playerInventory = event.getPlayer().getInventory();
+
+            for (ItemStack item : playerInventory) {
+                if (isValidItem(event, item)) {
+                    replaceItem(event, playerInventory, item);
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void replaceItem(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replaceHand(event, playerInventory, item), 1L);
+    }
+
+    private static void replaceHand(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
+        Material brokenItem = event.getBrokenItem().getType();
+        Material mainHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
+        Material offHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
+
+        if (brokenItem.equals(mainHandItem)) {
+            playerInventory.setItemInMainHand(item.clone());
+            item.setAmount(0);
+
+        } else if (brokenItem.equals(offHandItem)) {
+            playerInventory.setItemInOffHand(item.clone());
+            item.setAmount(0);
+        }
+    }
+
+    private static boolean isValidItem(PlayerItemBreakEvent event, ItemStack item) {
+        return item != null && (!item.equals(event.getBrokenItem()) && item.getType().equals(event.getBrokenItem().getType()));
+    }
+
     public boolean isReplenishAble(ItemStack item) {
         switch (item.getType()) {
 
@@ -55,43 +93,5 @@ public class ToolBreakListener implements Listener {
             default:
                 return false;
         }
-    }
-
-    @EventHandler
-    public void onPlayerToolBreakEvent(PlayerItemBreakEvent event) {
-
-        if (isReplenishAble(event.getBrokenItem())) {
-            final PlayerInventory playerInventory = event.getPlayer().getInventory();
-
-            for (ItemStack item : playerInventory) {
-                if (isValidItem(event, item)) {
-                    replaceItem(event, playerInventory, item);
-                    break;
-                }
-            }
-        }
-    }
-
-    private static void replaceItem(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replaceHand(event, playerInventory, item), 1L);
-    }
-
-    private static void replaceHand(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
-        Material brokenItem = event.getBrokenItem().getType();
-        Material mainHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
-        Material offHandItem = event.getPlayer().getEquipment().getItemInMainHand().getType();
-
-        if (brokenItem.equals(mainHandItem)) {
-            playerInventory.setItemInMainHand(item.clone());
-            item.setAmount(0);
-
-        } else if (brokenItem.equals(offHandItem)) {
-            playerInventory.setItemInOffHand(item.clone());
-            item.setAmount(0);
-        }
-    }
-
-    private static boolean isValidItem(PlayerItemBreakEvent event, ItemStack item) {
-        return item != null && (!item.equals(event.getBrokenItem()) && item.getType().equals(event.getBrokenItem().getType()));
     }
 }
