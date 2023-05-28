@@ -25,28 +25,32 @@ public class BlockReplenisher implements Listener {
             }
 
             removePlacedItems(event);
+            replenishItem(event);
+        }
+    }
 
-            final PlayerInventory inventory = event.getPlayer().getInventory();
-            Material placedMaterial = event.getItemInHand().getType();
+    private static void replenishItem(BlockPlaceEvent event) {
+        final PlayerInventory inventory = event.getPlayer().getInventory();
+        Material placedMaterial = event.getItemInHand().getType();
 
-            for(ItemStack item : inventory.getContents()){
+        for(ItemStack item : inventory.getContents()){
 
-                if(item != null && (item.getType().equals(placedMaterial))){
-                    //found same item like that that was placed
-
-                    //replenish the item (move the item from the inventory to the main hand)
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
-                        if(event.getHand() == EquipmentSlot.HAND){
-                            inventory.setItemInMainHand(item.clone());
-                            item.setAmount(0);
-                        }else if(event.getHand() == EquipmentSlot.OFF_HAND){
-                            inventory.setItemInOffHand(item.clone());
-                            item.setAmount(0);
-                        }
-                    },1L);
-                    break;
-                }
+            if(item != null && (item.getType().equals(placedMaterial))){
+                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replenishHand(event, inventory, item) ,1L);
+                break;
             }
+        }
+    }
+
+    private static void replenishHand(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
+
+        if(event.getHand() == EquipmentSlot.HAND){
+            inventory.setItemInMainHand(item.clone());
+            item.setAmount(0);
+
+        }else if(event.getHand() == EquipmentSlot.OFF_HAND){
+            inventory.setItemInOffHand(item.clone());
+            item.setAmount(0);
         }
     }
 
