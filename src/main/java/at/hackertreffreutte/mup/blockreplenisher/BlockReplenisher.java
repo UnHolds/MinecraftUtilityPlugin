@@ -13,57 +13,62 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BlockReplenisher implements Listener {
 
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
 
-        //placed last item
-        if(event.getItemInHand().getAmount() == 1){
-
-
+        if(placedLastItem(event)){
             //TODO
             //workaround fix later otherwise shovel will be removed when making a path
             if(event.getItemInHand().getMaxStackSize() == 1){
                 return;
             }
 
-            final PlayerInventory inv = event.getPlayer().getInventory();
+            removePlacedItems(event);
+            replenishItem(event);
+        }
+    }
 
-            //get material of placed item
-            Material placedMaterial = event.getItemInHand().getType();
+    private static void replenishItem(BlockPlaceEvent event) {
+        final PlayerInventory inventory = event.getPlayer().getInventory();
+        Material placedMaterial = event.getItemInHand().getType();
 
-            //remove placed item
-            if(event.getHand() == EquipmentSlot.HAND){
-                event.getItemInHand().setAmount(0);
-            }else{
-                event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
+        for(ItemStack item : inventory.getContents()){
+            if(isPlacedMaterial(placedMaterial, item)){
+                replenishItem(event, inventory, item);
+                break;
             }
+        }
+    }
 
+    private static boolean placedLastItem(BlockPlaceEvent event) {
+        return event.getItemInHand().getAmount() == 1;
+    }
 
-            for(int i= 0; i < inv.getContents().length; i++){
-                final ItemStack item = inv.getItem(i);
+    private static void removePlacedItems(BlockPlaceEvent event) {
+        if(event.getHand() == EquipmentSlot.HAND){
+            event.getItemInHand().setAmount(0);
+        }else{
+            event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
+        }
+    }
 
-                if(item != null){
-                    if(item.getType().equals(placedMaterial)){
-                        //found same item like that that was placed
+    private static boolean isPlacedMaterial(Material placedMaterial, ItemStack item) {
+        return item != null && (item.getType().equals(placedMaterial));
+    }
 
-                        //replenish the item (move the item from the inventory to the main hand)
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), new Runnable() {
-                            public void run() {
-                                if(event.getHand() == EquipmentSlot.HAND){
-                                    inv.setItemInMainHand(item.clone());
-                                    item.setAmount(0);
-                                }else if(event.getHand() == EquipmentSlot.OFF_HAND){
-                                    inv.setItemInOffHand(item.clone());
-                                    item.setAmount(0);
-                                }
-                            }
-                        },1L);
+    private static void replenishItem(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> replenishHand(event, inventory, item) ,1L);
+    }
 
-                        break;
-                    }
-                }
-            }
+    private static void replenishHand(BlockPlaceEvent event, PlayerInventory inventory, ItemStack item) {
+
+        if(event.getHand() == EquipmentSlot.HAND){
+            inventory.setItemInMainHand(item.clone());
+            item.setAmount(0);
+
+        }else if(event.getHand() == EquipmentSlot.OFF_HAND){
+            inventory.setItemInOffHand(item.clone());
+            item.setAmount(0);
         }
     }
 }
