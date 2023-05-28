@@ -119,41 +119,42 @@ public class DropperPlanterListener implements Listener {
             }
 
             if (soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND)) {
-                //planting
-
-                ArrayList<Block> field = getField(soilOriginBlock.getLocation(), targetFace);
-
-                //throw nothing out
-                event.setCancelled(true);
-
-                //nothing to plant -> cancel
-                if (field.isEmpty()) {
-                    return;
-                }
-
-                //remove dropped item
-                Dropper dropper = (Dropper) event.getBlock().getState();
-                final Inventory inv = dropper.getInventory();
-
-                Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
-                    for (ItemStack stack : inv.getContents()) {
-
-                        if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
-                            stack.setAmount(stack.getAmount() - 1);
-                            break;
-                        }
-                    }
-                }, 1L);
-
-                int randomIndex = (int) (Math.random() * field.size());
-                //overflow protection
-                if (randomIndex == field.size()) {
-                    randomIndex = 0;
-                }
-
-                field.get(randomIndex).setType(seedToPlant(event.getItem()));
+                plant(event, targetFace, soilOriginBlock);
             }
         }
+    }
+
+    private void plant(BlockDispenseEvent event, BlockFace targetFace, Block soilOriginBlock) {
+        ArrayList<Block> field = getField(soilOriginBlock.getLocation(), targetFace);
+
+        //throw nothing out
+        event.setCancelled(true);
+
+        if (field.isEmpty()) {
+            return;
+        }
+
+        //remove dropped item
+        Dropper dropper = (Dropper) event.getBlock().getState();
+        final Inventory inv = dropper.getInventory();
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
+            for (ItemStack stack : inv.getContents()) {
+
+                if (stack != null && (stack.getType().equals(event.getItem().getType()))) {
+                    stack.setAmount(stack.getAmount() - 1);
+                    break;
+                }
+            }
+        }, 1L);
+
+        int randomIndex = (int) (Math.random() * field.size());
+        //overflow protection
+        if (randomIndex == field.size()) {
+            randomIndex = 0;
+        }
+
+        field.get(randomIndex).setType(seedToPlant(event.getItem()));
     }
 
     private static boolean isDropper(BlockDispenseEvent event) {
