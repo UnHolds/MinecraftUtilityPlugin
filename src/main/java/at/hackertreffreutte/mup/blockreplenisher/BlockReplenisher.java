@@ -17,20 +17,14 @@ public class BlockReplenisher implements Listener {
     public void onBlockPlace(BlockPlaceEvent event){
 
         //placed last item
-        if(event.getItemInHand().getAmount() == 1){
-
+        if(placedLastItem(event)){
             //TODO
             //workaround fix later otherwise shovel will be removed when making a path
             if(event.getItemInHand().getMaxStackSize() == 1){
                 return;
             }
 
-            //remove placed item
-            if(event.getHand() == EquipmentSlot.HAND){
-                event.getItemInHand().setAmount(0);
-            }else{
-                event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
-            }
+            removePlacedItems(event);
 
             final PlayerInventory inventory = event.getPlayer().getInventory();
             Material placedMaterial = event.getItemInHand().getType();
@@ -53,6 +47,18 @@ public class BlockReplenisher implements Listener {
                     break;
                 }
             }
+        }
+    }
+
+    private static boolean placedLastItem(BlockPlaceEvent event) {
+        return event.getItemInHand().getAmount() == 1;
+    }
+
+    private static void removePlacedItems(BlockPlaceEvent event) {
+        if(event.getHand() == EquipmentSlot.HAND){
+            event.getItemInHand().setAmount(0);
+        }else{
+            event.getPlayer().getEquipment().getItemInOffHand().setAmount(0);
         }
     }
 }
