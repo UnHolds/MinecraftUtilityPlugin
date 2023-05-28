@@ -59,25 +59,27 @@ public class ToolBreakListener implements Listener {
     public void onPlayerToolBreakEvent(PlayerItemBreakEvent event){
 
         if(isReplenishAble(event.getBrokenItem())){
-
             final PlayerInventory playerInventory = event.getPlayer().getInventory();
+
             for(ItemStack item : playerInventory){
-
                 if(isValidItem(event, item)){
-
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
-                        if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
-                            playerInventory.setItemInMainHand(item.clone());
-                            item.setAmount(0);
-                        }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
-                            playerInventory.setItemInOffHand(item.clone());
-                            item.setAmount(0);
-                        }
-                    },1L);
+                    replaceItem(event, playerInventory, item);
                     break;
                 }
             }
         }
+    }
+
+    private static void replaceItem(PlayerItemBreakEvent event, PlayerInventory playerInventory, ItemStack item) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(JavaPlugin.getPlugin(Main.class), () -> {
+            if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInMainHand().getType())){
+                playerInventory.setItemInMainHand(item.clone());
+                item.setAmount(0);
+            }else if(event.getBrokenItem().getType().equals(event.getPlayer().getEquipment().getItemInOffHand().getType())){
+                playerInventory.setItemInOffHand(item.clone());
+                item.setAmount(0);
+            }
+        },1L);
     }
 
     private static boolean isValidItem(PlayerItemBreakEvent event, ItemStack item) {
