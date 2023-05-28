@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dropper;
+import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -51,7 +52,6 @@ public class DropperPlanterListener implements Listener {
             posX = soilOriginLocation.getBlockX() - 1;
             posZ = soilOriginLocation.getBlockZ() - 2;
 
-
         } else if (direction == BlockFace.EAST) {
             posX = soilOriginLocation.getBlockX();
             posZ = soilOriginLocation.getBlockZ() - 1;
@@ -68,6 +68,11 @@ public class DropperPlanterListener implements Listener {
             return new ArrayList<>();
         }
 
+        return buildField(soilOriginLocation, posX, posZ);
+    }
+
+    @NotNull
+    private static ArrayList<Block> buildField(Location soilOriginLocation, int posX, int posZ) {
         ArrayList<Block> field = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
@@ -93,33 +98,24 @@ public class DropperPlanterListener implements Listener {
 
     @EventHandler
     public void onDispenseEvent(final BlockDispenseEvent event) {
-        if (event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER)) {
+        if (isDropper(event)) {
 
-            //check if item is seed otherwise return
             if (!plantable(event.getItem())) {
                 return;
             }
 
-            org.bukkit.block.data.type.Dispenser dropperType = (org.bukkit.block.data.type.Dispenser) event.getBlock().getBlockData();
+            Dispenser dropperType = (Dispenser) event.getBlock().getBlockData();
             BlockFace targetFace = dropperType.getFacing();
 
             Block soilOriginBlock;
             Location location = event.getBlock().getLocation();
 
-            if (targetFace.equals(BlockFace.NORTH)) {
-                soilOriginBlock = location.add(0, -1, -1).getBlock();
-
-            } else if (targetFace.equals(BlockFace.EAST)) {
-                soilOriginBlock = location.add(1, -1, 0).getBlock();
-
-            } else if (targetFace.equals(BlockFace.SOUTH)) {
-                soilOriginBlock = location.add(0, -1, 1).getBlock();
-
-            } else if (targetFace.equals(BlockFace.WEST)) {
-                soilOriginBlock = location.add(-1, -1, 0).getBlock();
-
-            } else {
-                return;
+            switch (targetFace) {
+                case NORTH: soilOriginBlock = location.add(0, -1, -1).getBlock(); break;
+                case EAST: soilOriginBlock = location.add(1, -1, 0).getBlock(); break;
+                case SOUTH: soilOriginBlock = location.add(0, -1, 1).getBlock(); break;
+                case WEST: soilOriginBlock = location.add(-1, -1, 0).getBlock(); break;
+                default: return;
             }
 
             if (soilOriginBlock.getBlockData().getMaterial().equals(Material.FARMLAND)) {
@@ -158,5 +154,9 @@ public class DropperPlanterListener implements Listener {
                 field.get(randomIndex).setType(seedToPlant(event.getItem()));
             }
         }
+    }
+
+    private static boolean isDropper(BlockDispenseEvent event) {
+        return event.getBlock().getBlockData().getMaterial().equals(Material.DROPPER);
     }
 }
